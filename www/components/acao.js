@@ -1,79 +1,106 @@
 // This is a JavaScript file
-//beep
+
+//conexão
 $(document).on("click", "#local", function(){
+
+var online = navigator.onLine;
+if(online==false) {
+alert('Sem Conexão, favor conectar a uma rede');
+}
+
+else{
+//beep
   navigator.notification.beep(3);
-});
 
 //vibrar
-$(document).on("click", "#local", function(){
   navigator.vibrate(6000);
-});
-
-//localizar
-$(document).on("click", "#local", function(){
-if( !('geolocation' in navigator) ) {
-    alert("Navegador não tem suporte API Geolocation");
-  }
-  navegator.geolocation.getCurrentPosition(success, error, PositionOptions);
-
-  function geolocationSuccess(position){
-    navigator.notification.alert("Latitude: " + position.coords.latitude + "\n" + "Longitude: " + position.coords.longitude);
-  };
-  navigator.geolocation.getCurrentPosition(geolocationSuccess);
-});
-
-//verificar conexão com internet
-$(document).on("click", "#local", function(){
-  function checkConnection() {
-    var networkState = navigator.connection.type;
-
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Conexão desconhecida';
-    states[Connection.ETHERNET] = 'Conexão Ethernet.';
-    states[Connection.WIFI]     = 'Conexão WiFi.';
-    states[Connection.CELL_2G]  = 'Cell 2G connection.';
-    states[Connection.CELL_3G]  = 'Cell 3G connection.';
-    states[Connection.CELL_4G]  = 'Cell 4G connection.';
-    states[Connection.CELL]     = 'Cell generic connection.';
-    states[Connection.NONE]     = 'Sem conexão.';
-
-    
 }
-checkConnection();
 });
 
-if(states==Connection.NONE){
-  navigator.notification.alert("Sem conexão");
-}
+
 
 //mapa
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+    console.log("navigator.geolocation works well");
+}
+
 $(document).on("click", "#local", function(){
-document.addEventListener('DOMContentLoaded', function(){
- 
-    var target = document.querySelector('#map');
-    
-    navigator.geolocation.getCurrentPosition(function(position) {
- 
-        var latitude   = position.coords.latitude;
-        var longitude  = position.coords.longitude;
-        var coordinate = new google.maps.LatLng(latitude, longitude);
- 
-        var optionsMap = {
-                    center : coordinate,
-                    zoom: 19,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
- 
-        var map = new google.maps.Map(target, optionsMap);
- 
-        var configMarker = {
-                             position : coordinate,
-                             map : map,
-                             title: "Você está aqui!"
-                            };
- 
-        var marker = new google.maps.Marker(configMarker);
- 
+var Latitude = undefined;
+var Longitude = undefined;
+
+// Get geo coordinates
+
+function getMapLocation() {
+
+    navigator.geolocation.getCurrentPosition
+    (onMapSuccess, onMapError, { enableHighAccuracy: true });
+}
+
+// Success callback for get geo coordinates
+
+var onMapSuccess = function (position) {
+
+    Latitude = position.coords.latitude;
+    Longitude = position.coords.longitude;
+
+    getMap(Latitude, Longitude);
+
+}
+
+// Obter mapa usando coordenadas
+
+function getMap(latitude, longitude) {
+
+    var mapOptions = {
+        center: new google.maps.LatLng(0, 0),
+        zoom: 1,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map
+    (document.getElementById("map"), mapOptions);
+
+
+    var latLong = new google.maps.LatLng(latitude, longitude);
+
+    var marker = new google.maps.Marker({
+        position: latLong
     });
-});
+
+    marker.setMap(map);
+    map.setZoom(15);
+    map.setCenter(marker.getPosition());
+}
+
+// Callback de sucesso para assistir a sua mudança de posição
+
+var onMapWatchSuccess = function (position) {
+
+    var updatedLatitude = position.coords.latitude;
+    var updatedLongitude = position.coords.longitude;
+
+    if (updatedLatitude != Latitude && updatedLongitude != Longitude) {
+
+        Latitude = updatedLatitude;
+        Longitude = updatedLongitude;
+
+        getMap(updatedLatitude, updatedLongitude);
+    }
+}
+
+// Erro callback
+
+function onMapError(error) {
+    console.log('code: ' + error.code + '\n' +
+        'message: ' + error.message + '\n');
+}
+
+// Assista sua mudança de posição
+
+function watchMapPosition() {
+
+    return navigator.geolocation.watchPosition
+    (onMapWatchSuccess, onMapError, { enableHighAccuracy: true });
+}
 });
