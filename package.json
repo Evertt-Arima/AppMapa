@@ -10,7 +10,8 @@
         "cordova-plugin-dialogs": "2.0.1",
         "cordova-plugin-vibration": "2.1.6",
         "cordova-plugin-network-information": "2.0.1",
-        "cordova-plugin-media": "4.0.0"
+        "cordova-plugin-media": "4.0.0",
+        "cordova-plugin-device-orientation": "1.0.7"
     },
     "scripts": {
         "monaca:preview": "npm run dev",
@@ -26,7 +27,8 @@
             "cordova-plugin-dialogs": {},
             "cordova-plugin-vibration": {},
             "cordova-plugin-network-information": {},
-            "cordova-plugin-media": {}
+            "cordova-plugin-media": {},
+            "cordova-plugin-device-orientation": {}
         }
     },
     "devDependencies": {
