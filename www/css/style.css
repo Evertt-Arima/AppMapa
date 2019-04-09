@@ -1,23 +1,43 @@
 /**/
 h1{
-  margin-top: 0px;
-  margin-bottom: 100px;
+  margin-top: -9px;
   text-align: center;
   font-family: Stencil Std, fantasy;
-  font-size: 50px;
+  font-size: 37px;
+}
+p{
+  color:white;
 }
 
 .rbtn{
-  margin-top: 30px;
+  margin-top: 25px;
   
 }
 
+
+#app{
+  margin-top: 10px;
+}
+
+#loc{
+ margin-top: -8px;
+
+}
+
+#local{
+  height: 45px;
+  font-size: 25px;
+}
+
 body{
-  background-color:lightskyblue;
+  background-color:rgb(33, 93, 131);
+ 
+
 }
 
 .jumbotron{
   margin: 15px;
-background-color: rgb(3, 160, 207);
-height: 95px;
+background-color: rgb(22, 80, 97);
+height: 90px;
+
 }
