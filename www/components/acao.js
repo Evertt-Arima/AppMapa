@@ -1,6 +1,6 @@
 // This is a JavaScript file
 
-//conexão
+
 $(document).on("click", "#local", function(){
 
 var online = navigator.onLine;
@@ -19,88 +19,38 @@ else{
 
 
 
+
+
 //mapa
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    console.log("navigator.geolocation works well");
-}
 
 $(document).on("click", "#local", function(){
-var Latitude = undefined;
-var Longitude = undefined;
+L.mapquest.key = 'wcbAIEAbBdYNOHSZ9Qefm71xoFMaAgws';
+var baseLayer = L.mapquest.tileLayer('dark');
 
-// Get geo coordinates
+L.mapquest.geocoding().geocode(['Mongagua, SP'], showMap);
 
-function getMapLocation() {
-
-    navigator.geolocation.getCurrentPosition
-    (onMapSuccess, onMapError, { enableHighAccuracy: true });
+function showMap(err, data) {
+  var map = createMap();
+  map.addControl(L.mapquest.control());
+  addLayerControl(map);
 }
 
-// Success callback for get geo coordinates
-
-var onMapSuccess = function (position) {
-
-    Latitude = position.coords.latitude;
-    Longitude = position.coords.longitude;
-
-    getMap(Latitude, Longitude);
-
+function createMap() {
+  var map = L.mapquest.map('map', {
+    center: [-24.1219166, -46.6789992],
+    zoom: 14,
+    layers: baseLayer
+  });
+  return map;
 }
 
-// Obter mapa usando coordenadas
-
-function getMap(latitude, longitude) {
-
-    var mapOptions = {
-        center: new google.maps.LatLng(0, 0),
-        zoom: 1,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    map = new google.maps.Map
-    (document.getElementById("map"), mapOptions);
-
-
-    var latLong = new google.maps.LatLng(latitude, longitude);
-
-    var marker = new google.maps.Marker({
-        position: latLong
-    });
-
-    marker.setMap(map);
-    map.setZoom(15);
-    map.setCenter(marker.getPosition());
-}
-
-// Callback de sucesso para assistir a sua mudança de posição
-
-var onMapWatchSuccess = function (position) {
-
-    var updatedLatitude = position.coords.latitude;
-    var updatedLongitude = position.coords.longitude;
-
-    if (updatedLatitude != Latitude && updatedLongitude != Longitude) {
-
-        Latitude = updatedLatitude;
-        Longitude = updatedLongitude;
-
-        getMap(updatedLatitude, updatedLongitude);
-    }
-}
-
-// Erro callback
-
-function onMapError(error) {
-    console.log('code: ' + error.code + '\n' +
-        'message: ' + error.message + '\n');
-}
-
-// Assista sua mudança de posição
-
-function watchMapPosition() {
-
-    return navigator.geolocation.watchPosition
-    (onMapWatchSuccess, onMapError, { enableHighAccuracy: true });
+function addLayerControl(map) {
+  L.control.layers({
+    'Map': L.mapquest.tileLayer('map'),
+    'Satellite': L.mapquest.tileLayer('satellite'),
+    'Hybrid': L.mapquest.tileLayer('hybrid'),
+    'Light': L.mapquest.tileLayer('light'),
+    'Dark': baseLayer
+  }, {}, { position: 'topleft'}).addTo(map);
 }
 });
