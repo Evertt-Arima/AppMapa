@@ -30,7 +30,7 @@ var onSuccess = function(position){
 L.mapquest.key = 'wcbAIEAbBdYNOHSZ9Qefm71xoFMaAgws';
 
 L.mapquest.map('map', {
-  center: [37.7749, -122.4194],
+  center: [position.coords.latitude, position.coords.longitude],
   layers: L.mapquest.tileLayer('map'),
   zoom: 12
 });
